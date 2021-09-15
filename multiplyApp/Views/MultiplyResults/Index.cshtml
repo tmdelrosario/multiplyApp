@@ -20,39 +20,44 @@
                 $("#btnMultiply").click(function() {
                     var MultiplyId = new Object();
                     MultiplyId.id = $('#idnumber').val();
-                if (MultiplyId != null) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/MultiplyResults/PostProduct",
-                        data: JSON.stringify(MultiplyId),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        success: function(response) {
-                            if (response != null) {
-                                text = ""
-                                for (var i in response) {
-                                    text += "<ul>Number: " + response[i].number;
-                                    for (var j in response[i].multiplyBy) {
-                                        text += "<li>Multiplicand: " + response[i].multiplyBy[j].multiplicand + "</li>";
-                                        text += "<li>Multiplier: " + response[i].multiplyBy[j].multiplier + "</li>";
-                                        text += "<li>Product: " + response[i].multiplyBy[j].product + "</li>";
-                                        text += "<br>";
+                    if ((MultiplyId.id == "") || ($.isNumeric(MultiplyId.id))) {
+                        if (MultiplyId != null) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/MultiplyResults/PostProduct",
+                                data: JSON.stringify(MultiplyId),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                success: function (response) {
+                                    if (response != null) {
+                                        text = ""
+                                        for (var i in response) {
+                                            text += "<ul>Number: " + response[i].number;
+                                            for (var j in response[i].multiplyBy) {
+                                                text += "<li>Multiplicand: " + response[i].multiplyBy[j].multiplicand + "</li>";
+                                                text += "<li>Multiplier: " + response[i].multiplyBy[j].multiplier + "</li>";
+                                                text += "<li>Product: " + response[i].multiplyBy[j].product + "</li>";
+                                                text += "<br>";
+                                            }
+                                            text += "</ul>";
+                                        }
+                                        document.getElementById("outputDisplay").innerHTML = text;
+                                    } else {
+                                        alert("Something went wrong");
                                     }
-                                    text += "</ul>";
+                                },
+                                failure: function (response) {
+                                    alert(response.responseText);
+                                },
+                                error: function (response) {
+                                    alert(response.responseText);
                                 }
-                                document.getElementById("outputDisplay").innerHTML = text;
-                            } else {
-                                alert("Something went wrong");
-                            }
-                        },
-                        failure: function(response) {
-                            alert(response.responseText);
-                        },
-                        error: function(response) {
-                            alert(response.responseText);
+                            });
                         }
-                    });
-                }
+                    }
+                    else {
+                        alert("Not a valid Number");
+                    }
             });
         });
         </script> 
