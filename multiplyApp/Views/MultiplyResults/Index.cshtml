@@ -1,0 +1,68 @@
+﻿@model multiplyApp.Models.MultiplyId
+
+@{
+    Layout = null;
+}
+<style>
+    ul {
+        list-style-type: none;
+    }
+    ul li {
+        padding-left: 30px;
+    }
+</style>
+<html> 
+    <head> 
+        <meta name = "viewport" content = "width=device-width" /> 
+        <title> JQUERY AJAX CALL </title> 
+        <script type = "text/javascript" src = "https://code.jquery.com/jquery-1.12.4.js" ></script> 
+        <script type = "text/javascript"> $(function() {
+                $("#btnMultiply").click(function() {
+                    var MultiplyId = new Object();
+                    MultiplyId.id = $('#idnumber').val();
+                if (MultiplyId != null) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/MultiplyResults/PostProduct",
+                        data: JSON.stringify(MultiplyId),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(response) {
+                            if (response != null) {
+                                text = ""
+                                for (var i in response) {
+                                    text += "<ul>Number: " + response[i].number;
+                                    for (var j in response[i].multiplyBy) {
+                                        text += "<li>Multiplicand: " + response[i].multiplyBy[j].multiplicand + "</li>";
+                                        text += "<li>Multiplier: " + response[i].multiplyBy[j].multiplier + "</li>";
+                                        text += "<li>Product: " + response[i].multiplyBy[j].product + "</li>";
+                                        text += "<br>";
+                                    }
+                                    text += "</ul>";
+                                }
+                                document.getElementById("outputDisplay").innerHTML = text;
+                            } else {
+                                alert("Something went wrong");
+                            }
+                        },
+                        failure: function(response) {
+                            alert(response.responseText);
+                        },
+                        error: function(response) {
+                            alert(response.responseText);
+                        }
+                    });
+                }
+            });
+        });
+        </script> 
+    </head> 
+    <body> 
+        <div style = "margin-left:20px"> Multiplication Table </div> <br/> 
+        <div title = "PostPortion"> 
+            <input type = "text" id = "idnumber" placeholder = "ID" /> 
+            <input type = "button" id = "btnMultiply" value = "Post Data" /> 
+            <p id="outputDisplay"></p>
+        </div> 
+    </body> 
+</html>
